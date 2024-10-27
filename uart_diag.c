@@ -2,8 +2,6 @@
 #include "stm32f3xx.h"
 #include <stdio.h>
 
-uint32_t adc_raw;
-float adc_value;
 uint16_t samples[2];
 
 void uart_pin_init(void)
@@ -26,12 +24,11 @@ void uart_pin_init(void)
 	GPIOA->AFR[0] |= (AF7 << AFR3); //shifting in AFRLow
 	GPIOA->OTYPER &= ~GPIO_OTYPER_OT_2; //push pull
 	GPIOA->OTYPER |= GPIO_OTYPER_OT_3; //open drain
-
 }
 
 void uart_setup(void)
 {
-        // Program the M bits in USART_CR1 to define the word length = 8 bit length
+    // Program the M bits in USART_CR1 to define the word length = 8 bit length
 	USART2->CR1 &= ~USART_CR1_M;        
 
 	const uint32_t BAUD = 9600UL;
@@ -52,8 +49,6 @@ void uart_setup(void)
 	
 	// Set the TE bit in USART_CR1 to send an idle frame as first transmission
 	USART2->CR1 |= USART_CR1_TE;
-
-
 }
 
 void uart_init(void)
@@ -65,27 +60,9 @@ void uart_init(void)
 	RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
 	__IO uint32_t tmpreg = RCC->APB1ENR & (~RCC_APB1ENR_USART2EN);
     (void)tmpreg;
-
-
-
 }
 
 void uart_send(void)
 {
-    //formula needed;
-
-	adc_value = (float)adc_raw / (4096) * 3.3f;
-	//char txt[100] = { 0 };
-
-	//snprintf(txt, sizeof(txt),"voltage = %f\r\n", adc_value);
-
-	//char* point = &txt[0];
-
-	//fprintf(stderr, "%.2f V\r\n",adc_value);
-
-	fprintf(stderr, "Ch1 = %d   Ch2 = %d \r\n",samples[0],samples[1]);
-
-
-
-
+	fprintf(stderr, "VRX = %d   VRY = %d \r\n",samples[0]/(41),samples[1]/(41)); // mx read value from ADC 4092 divided by 41
 }

@@ -18,10 +18,8 @@ int main()
 
     while(1)
     {
-		//myDelay();
 		take_sample();
 		uart_send();
-	
     }
     return 0;
 }
@@ -64,13 +62,8 @@ static void clock_init(void)
     while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL) { } // wait for switch status
 }
 
-void myDelay(void)
+void take_sample(void)
 {
-    for(volatile long i = 0; i < 1000000; i++)
-    {
-
-	}
-	GPIOA->ODR ^= GPIO_ODR_5; 
-    
-
+    ADC1->CR |= ADC_CR_ADSTART;                 //start conversion
+    //ADC1->CR |= ADC_CR_ADSTP;                   //stop conversion
 }

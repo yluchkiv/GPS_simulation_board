@@ -10,7 +10,7 @@ void gpio_setup(void)                           //input on pin PA0 and PA1
     __IO uint32_t tmpreg = RCC->AHBENR & (~RCC_AHBENR_GPIOAEN); 
     (void)tmpreg;
     GPIOA->MODER |= GPIO_MODER_MODER0;          // 11: Analog mode - for PA0
-    GPIOA->MODER |= GPIO_MODER_MODER1;          // 11: Analog mode - for APA1
+    GPIOA->MODER |= GPIO_MODER_MODER1;          // 11: Analog mode - for PA1
 
 
     //some MC require AF and push-pull setiinhgs
@@ -30,7 +30,7 @@ void adc_setup(void) // ADC1 and 2
 
     ADC1->SQR1 |= ADC_SQR1_L_0;                 // 2 conversions
     ADC1->SQR1 |= ADC_SQR1_SQ1_0;               // channel 1st selected!!!= number 1 into SQ1
-    ADC1->SQR1 |= 2 << 12;     //channel 2st selected = nuber 2 into SQ2
+    ADC1->SQR1 |= 2 << 12;                      //channel 2st selected = nuber 2 into SQ2
 
     //ADC1->CFGR &= ~ADC_CFGR_CONT;                // 0: Continuous conversion mode OFF
 
@@ -56,20 +56,5 @@ void dma_setup(void)
 	DMA1_Channel1->CCR |= DMA_CCR_PSIZE_0;          // 01: size 16bit
 	DMA1_Channel1->CCR |= DMA_CCR_MINC;             // 1 : memory increment enabled
 	DMA1_Channel1->CCR |= DMA_CCR_CIRC;             // 1: Circ mode enabled
-	DMA1_Channel1->CCR |= DMA_CCR_EN;           // Activate the channel in the DMA control register
-
-}
-
-void take_sample(void)
-{
-    
-    ADC1->CR |= ADC_CR_ADSTART;                 //start conversion
-    //adc_raw = ADC1->DR;
-    for(volatile long i = 0; i < 100000; i++)
-    {
-
-	}
-    ADC1->CR |= ADC_CR_ADSTP;                   //stop conversion
-
-    // control DMA transmission!
+	DMA1_Channel1->CCR |= DMA_CCR_EN;               // Activate the channel in the DMA control register
 }
